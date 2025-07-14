@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>②部：「川の流れのように」で学ぶ圏論的研究アプローチ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .presentation-container {
+            width: 1123px; /* A4 horizontal */
+            height: 794px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 50px 60px 140px 60px;
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            box-sizing: border-box;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .slide h2 {
+            font-size: 2em;
+            color: #34495e;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .slide h3 {
+            font-size: 1.4em;
+            color: #2980b9;
+            margin: 15px 0 10px 0;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-bottom: 30px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            padding-top: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .example-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+            margin-bottom: 15px;
+        }
+
+        .formula-box {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border: 2px solid #bdc3c7;
+        }
+
+        .bullet-point {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .bullet-point::before {
+            content: "●";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            background: #34495e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.2em;
+            color: white;
+            margin-bottom: 40px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .river-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            color: white;
+        }
+
+        .river-stage {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            color: #2c3e50;
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .life-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            color: white;
+        }
+
+        .life-stage {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            color: #2c3e50;
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .flow-arrow {
+            font-size: 2em;
+            color: rgba(255,255,255,0.8);
+            margin: 0 10px;
+        }
+
+        .song-lyric {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 3px solid #fdcb6e;
+            margin: 15px 0;
+            text-align: center;
+            font-style: italic;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .song-lyric h4 {
+            color: #d63031;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .category-theory-insight {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #17a2b8;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .discovery-box {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #e91e63;
+            margin: 20px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .discovery-box h3 {
+            color: #c2185b;
+            margin-bottom: 15px;
+        }
+
+        .functor-mapping {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 2px solid #3498db;
+            margin: 20px 0;
+        }
+
+        .mapping-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .domain-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .river-domain {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+
+        .life-domain {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        }
+
+        .mapping-arrow {
+            font-size: 3em;
+            color: #27ae60;
+            margin: 0 20px;
+        }
+
+        .natural-transformation {
+            background: linear-gradient(135deg, #81ecec 0%, #6c5ce7 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .natural-transformation h3 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+
+        .research-value {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .research-value h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .highlight-text {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 1.2em;
+        }
+
+        .emotional-impact {
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #e84393;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .music-note {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .lyric-analysis {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #fdcb6e;
+            margin: 10px 0;
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <div class="content">
+                <h1>「川の流れのように」で学ぶ圏論的研究アプローチ</h1>
+                <div class="subtitle">美空ひばりの名曲に隠された数学的構造</div>
+                <div class="subtitle">～人生と川の流れの深い関係性を圏論で読み解く～</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Why This Song -->
+        <div class="slide">
+            <h1>なぜ「川の流れのように」なのか？</h1>
+            <div class="content">
+                <div class="emotional-impact">
+                    <div class="music-note">🎵</div>
+                    <h3>日本人の心に深く響く普遍的メタファー</h3>
+                    <div class="highlight-text">「人生は川の流れのようなもの」</div>
+                </div>
+                <div class="two-column">
+                    <div class="example-box">
+                        <h3>🎶 楽曲の特徴</h3>
+                        <div class="bullet-point">誰もが知る美空ひばりの代表作</div>
+                        <div class="bullet-point">人生への深い洞察に満ちた歌詞</div>
+                        <div class="bullet-point">時間の流れと成長の物語</div>
+                        <div class="bullet-point">感情的共感を呼び起こす力</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>🔬 圏論的分析の利点</h3>
+                        <div class="bullet-point">既に文化的に定着したメタファー</div>
+                        <div class="bullet-point">抽象的数学が身近な物語になる</div>
+                        <div class="bullet-point">感情と論理の自然な融合</div>
+                        <div class="bullet-point">普遍的な構造パターンの発見</div>
+                    </div>
+                </div>
+                <div class="discovery-box">
+                    <h3>🎯 今回の発見</h3>
+                    <div class="highlight-text">
+                        美空ひばりが歌った人生観に、圏論の深い数学的構造が隠されていた
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: River Category Definition -->
+        <div class="slide">
+            <h1>A圏の定義：川の流れ圏</h1>
+            <div class="content">
+                <div class="example-box">
+                    <h3>🌊 川の流れ圏の構造</h3>
+                    <div class="formula-box">
+                        対象（Objects）：源流 → 渓流 → 中流 → 下流 → 河口<br>
+                        射（Morphisms）：水の流れ、合流、蛇行、時の経過<br>
+                        構造的特徴：一方向性、連続性、変化と持続の共存
+                    </div>
+                </div>
+                <div class="river-flow">
+                    <div class="river-stage">🏔️<br>源流<br>（山の湧水）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="river-stage">🌲<br>渓流<br>（急流・岩場）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="river-stage">🌾<br>中流<br>（平野・蛇行）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="river-stage">🏘️<br>下流<br>（都市・緩やか）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="river-stage">🌊<br>河口<br>（海との合流）</div>
+                </div>
+                <div class="two-column">
+                    <div class="example-box">
+                        <h3>対象の特徴</h3>
+                        <div class="bullet-point"><strong>源流</strong>：純粋で力強い始まり</div>
+                        <div class="bullet-point"><strong>渓流</strong>：激しい変化と試練</div>
+                        <div class="bullet-point"><strong>中流</strong>：安定した成熟期</div>
+                        <div class="bullet-point"><strong>下流</strong>：ゆったりとした流れ</div>
+                        <div class="bullet-point"><strong>河口</strong>：大いなるものとの合一</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>射の特徴</h3>
+                        <div class="bullet-point"><strong>水の流れ</strong>：基本的な変化プロセス</div>
+                        <div class="bullet-point"><strong>合流</strong>：他からの影響・学び</div>
+                        <div class="bullet-point"><strong>蛇行</strong>：迂回・回り道の価値</div>
+                        <div class="bullet-point"><strong>時の経過</strong>：不可逆的な前進</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Life Category Definition -->
+        <div class="slide">
+            <h1>B圏の定義：人生の旅圏</h1>
+            <div class="content">
+                <div class="example-box">
+                    <h3>👤 人生の旅圏の構造</h3>
+                    <div class="formula-box">
+                        対象（Objects）：幼少期 → 青春期 → 壮年期 → 晩年期 → 人生の完成<br>
+                        射（Morphisms）：成長体験、出会いと別れ、試練と学び<br>
+                        構造的特徴：不可逆的発展、記憶の蓄積、智慧の深化
+                    </div>
+                </div>
+                <div class="life-flow">
+                    <div class="life-stage">👶<br>幼少期<br>（純真・可能性）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="life-stage">🌟<br>青春期<br>（挑戦・激動）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="life-stage">💼<br>壮年期<br>（責任・成熟）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="life-stage">🌸<br>晩年期<br>（円熟・静寂）</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="life-stage">✨<br>人生の完成<br>（統合・昇華）</div>
+                </div>
+                <div class="two-column">
+                    <div class="example-box">
+                        <h3>人生段階の特徴</h3>
+                        <div class="bullet-point"><strong>幼少期</strong>：無限の可能性と純粋性</div>
+                        <div class="bullet-point"><strong>青春期</strong>：情熱的な挑戦と葛藤</div>
+                        <div class="bullet-point"><strong>壮年期</strong>：責任と経験の蓄積</div>
+                        <div class="bullet-point"><strong>晩年期</strong>：智慧と平安の境地</div>
+                        <div class="bullet-point"><strong>人生の完成</strong>：すべての統合</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>成長プロセスの特徴</h3>
+                        <div class="bullet-point"><strong>成長体験</strong>：段階的な発達と学習</div>
+                        <div class="bullet-point"><strong>出会いと別れ</strong>：人間関係の変化</div>
+                        <div class="bullet-point"><strong>試練と学び</strong>：困難からの成長</div>
+                        <div class="bullet-point"><strong>記憶の蓄積</strong>：経験の積み重ね</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Functor Discovery -->
+        <div class="slide">
+            <h1>関手の発見：川 ≃ 人生の構造的対応</h1>
+            <div class="content">
+                <div class="functor-mapping">
+                    <h3>🔗 関手 F: 川の流れ圏 → 人生の旅圏</h3>
+                    <div class="mapping-visual">
+                        <div class="domain-circle river-domain">🌊<br>川の世界</div>
+                        <div class="mapping-arrow">≃</div>
+                        <div class="domain-circle life-domain">👤<br>人生の世界</div>
+                    </div>
+                </div>
+                <div class="comparison-grid">
+                    <div class="example-box">
+                        <h3>対象の写像</h3>
+                        <div class="bullet-point">🏔️ <strong>源流</strong> → 👶 <strong>幼少期</strong><br>
+                        　純粋な始まり、無限の可能性</div>
+                        <div class="bullet-point">🌲 <strong>渓流</strong> → 🌟 <strong>青春期</strong><br>
+                        　激しい変化、エネルギーに満ちた時期</div>
+                        <div class="bullet-point">🌾 <strong>中流</strong> → 💼 <strong>壮年期</strong><br>
+                        　安定した流れ、責任ある立場</div>
+                        <div class="bullet-point">🌊 <strong>河口</strong> → ✨ <strong>人生の完成</strong><br>
+                        　大いなるものとの合一</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>射の写像</h3>
+                        <div class="bullet-point">💧 <strong>水の流れ</strong> → 📈 <strong>成長体験</strong><br>
+                        　自然で連続的な発達プロセス</div>
+                        <div class="bullet-point">🌊 <strong>合流</strong> → 🤝 <strong>出会い</strong><br>
+                        　他者との出会いによる変化</div>
+                        <div class="bullet-point">🔄 <strong>蛇行</strong> → 🌈 <strong>回り道</strong><br>
+                        　迂回することの価値と意味</div>
+                        <div class="bullet-point">⏰ <strong>時の経過</strong> → 🧠 <strong>智慧の蓄積</strong><br>
+                        　時間がもたらす深い理解</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Song Lyrics Analysis -->
+        <div class="slide">
+            <h1>歌詞に現れる圏論的洞察</h1>
+            <div class="content">
+                <div class="lyric-analysis">
+                    <div class="song-lyric">
+                        <h4>🎵 歌詞</h4>
+                        「知らず知らず歩んできた 細く長い道」
+                    </div>
+                    <div class="category-theory-insight">
+                        = 射の合成：無数の小さな経験の積み重ね
+                    </div>
+                </div>
+                <div class="lyric-analysis">
+                    <div class="song-lyric">
+                        <h4>🎵 歌詞</h4>
+                        「振り返れば はるかかなた 故郷が見える」
+                    </div>
+                    <div class="category-theory-insight">
+                        = 関手の構造保存：過去との関係性が保たれている
+                    </div>
+                </div>
+                <div class="lyric-analysis">
+                    <div class="song-lyric">
+                        <h4>🎵 歌詞</h4>
+                        「でこぼこ道や 曲がりくねった道」
+                    </div>
+                    <div class="category-theory-insight">
+                        = 射の多様性：複数の成長経路の存在
+                    </div>
+                </div>
+                <div class="discovery-box">
+                    <h3>🎯 圏論的解釈の深さ</h3>
+                    <div class="highlight-text">
+                        美空ひばりは直感的に、人生の数学的構造を歌に込めていた
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: More Lyrical Insights -->
+        <div class="slide">
+            <h1>さらなる歌詞の圏論的分析</h1>
+            <div class="content">
+                <div class="two-column">
+                    <div class="lyric-analysis">
+                        <div class="song-lyric">
+                            <h4>🎵 歌詞</h4>
+                            「川の流れのように ゆるやかに」
+                        </div>
+                        <div class="category-theory-insight">
+                            = 恒等射の概念：自然な状態を保つこと
+                        </div>
+                    </div>
+                    <div class="lyric-analysis">
+                        <div class="song-lyric">
+                            <h4>🎵 歌詞</h4>
+                            「いくつも越えて 星降る夜も」
+                        </div>
+                        <div class="category-theory-insight">
+                            = 射の反復：困難を乗り越える成長の繰り返し
+                        </div>
+                    </div>
+                </div>
+                <div class="lyric-analysis">
+                    <div class="song-lyric">
+                        <h4>🎵 歌詞</h4>
+                        「ああ 川の流れのように とめどなく」
+                    </div>
+                    <div class="category-theory-insight">
+                        = 無限の射の合成：人生の連続性と永続性
+                    </div>
+                </div>
+                <div class="natural-transformation">
+                    <h3>🔄 自然変換の発見</h3>
+                    <div style="color: white; font-size: 1.1em;">
+                        どの人生の道筋を辿っても、最終的に「川の流れのような境地」に達する<br>
+                        ＝ 人生の普遍的パターンの存在
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Natural Transformation -->
+        <div class="slide">
+            <h1>自然変換：どの道筋でも一貫した人生の構造</h1>
+            <div class="content">
+                <div class="natural-transformation">
+                    <h3>🌟 自然変換 η: 人生経路の普遍性</h3>
+                    <div style="color: white;">
+                        どのような人生の道筋を歩んでも、最終的な「流れ」の境地は同じ
+                    </div>
+                </div>
+                <div class="comparison-grid">
+                    <div class="example-box">
+                        <h3>パターン1：順調な人生</h3>
+                        <div class="bullet-point">幼少期→青春期→壮年期→晩年期<br>
+                        　（直線的な成長）</div>
+                        <div class="bullet-point">↓ η による変換</div>
+                        <div class="bullet-point">「ゆるやかな川の流れ」の境地</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>パターン2：波乱の人生</h3>
+                        <div class="bullet-point">挫折→再起→転機→円熟<br>
+                        　（曲がりくねった道）</div>
+                        <div class="bullet-point">↓ η による変換</div>
+                        <div class="bullet-point">同じ「川の流れ」の境地</div>
+                    </div>
+                </div>
+                <div class="discovery-box">
+                    <h3>🎯 可換性の発見</h3>
+                    <div class="formula-box" style="text-align: center;">
+                        η_晩年期 ∘ F(人生の経験) = G(川の境地) ∘ η_幼少期
+                    </div>
+                    <div class="highlight-text">
+                        異なる人生経路でも、最終的な「流れ」の理解は同じになる
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Research Power -->
+        <div class="slide">
+            <h1>圏論的分析の威力：隠された普遍構造の発見</h1>
+            <div class="content">
+                <div class="research-value">
+                    <h3>💎 「川の流れのように」から見えてきた深い洞察</h3>
+                    <div style="color: white; font-size: 1.1em;">
+                        自然現象と人生現象が同じ数学的構造を持つという発見
+                    </div>
+                </div>
+                <div class="three-column">
+                    <div class="example-box">
+                        <h3>🔍 発見された法則</h3>
+                        <div class="bullet-point"><strong>流れの法則</strong>：逆行できない一方向性</div>
+                        <div class="bullet-point"><strong>合流の法則</strong>：他者との出会いが変化を生む</div>
+                        <div class="bullet-point"><strong>蛇行の法則</strong>：回り道にも意味がある</div>
+                        <div class="bullet-point"><strong>収束の法則</strong>：最終的に平安に至る</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>🌉 応用可能性</h3>
+                        <div class="bullet-point">教育心理学への応用</div>
+                        <div class="bullet-point">組織発達理論への転用</div>
+                        <div class="bullet-point">文化変容プロセスの分析</div>
+                        <div class="bullet-point">創造プロセスの理解</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>💡 従来見えなかった洞察</h3>
+                        <div class="bullet-point"><strong>流体力学</strong>の人間発達への応用</div>
+                        <div class="bullet-point"><strong>河川工学</strong>の人生設計への転用</div>
+                        <div class="bullet-point"><strong>生態系理論</strong>の社会システムへの適用</div>
+                        <div class="bullet-point"><strong>時間論</strong>の成長理論への統合</div>
+                    </div>
+                </div>
+                <div class="formula-box" style="text-align: center; font-size: 1.2em; background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);">
+                    自然の法則 ≃ 人生の法則：同じ数学的構造が支配している
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Research Methodology -->
+        <div class="slide">
+            <h1>圏論的研究手法の確立</h1>
+            <div class="content">
+                <div class="example-box">
+                    <h3>📋 今回確立された研究プロセス</h3>
+                </div>
+                <div class="three-column">
+                    <div class="example-box">
+                        <div class="step-number">1</div>
+                        <h3>文化的メタファーの選択</h3>
+                        <div class="bullet-point">誰もが共感できる題材</div>
+                        <div class="bullet-point">既に定着した比喩表現</div>
+                        <div class="bullet-point">感情的共鳴を呼ぶもの</div>
+                    </div>
+                    <div class="example-box">
+                        <div class="step-number">2</div>
+                        <h3>圏論的構造化</h3>
+                        <div class="bullet-point">対象と射の明確な定義</div>
+                        <div class="bullet-point">関手による構造対応</div>
+                        <div class="bullet-point">自然変換の一貫性検証</div>
+                    </div>
+                    <div class="example-box">
+                        <div class="step-number">3</div>
+                        <h3>新たな洞察の抽出</h3>
+                        <div class="bullet-point">隠された法則の発見</div>
+                        <div class="bullet-point">異分野への応用可能性</div>
+                        <div class="bullet-point">普遍的パターンの抽出</div>
+                    </div>
+                </div>
+                <div class="research-value">
+                    <h3>🎯 この手法の革新性</h3>
+                    <div class="bullet-point" style="color: white;">感情と論理の融合：数学が人間的体験として理解される</div>
+                    <div class="bullet-point" style="color: white;">文化横断的応用：どの文化圏でも適用可能な普遍性</div>
+                    <div class="bullet-point" style="color: white;">学際的統合：芸術・科学・人文学の自然な結合</div>
+                    <div class="bullet-point" style="color: white;">実践的価値：日常経験から深い洞察を得る方法</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Summary -->
+        <div class="slide">
+            <h1>まとめ：「川の流れのように」が示した圏論の力</h1>
+            <div class="content">
+                <div class="emotional-impact">
+                    <div class="music-note">🌊</div>
+                    <h3>美空ひばりの直感 = 圏論の数学的真理</h3>
+                    <div class="highlight-text">
+                        芸術的洞察と数学的構造の美しい一致
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="example-box">
+                        <h3>確立された研究手法</h3>
+                        <div class="bullet-point">🎨 <strong>文化的メタファー</strong>を起点とする</div>
+                        <div class="bullet-point">📐 <strong>圏論的構造化</strong>による厳密化</div>
+                        <div class="bullet-point">🔍 <strong>関手・自然変換</strong>による分析</div>
+                        <div class="bullet-point">💡 <strong>新たな洞察</strong>の抽出</div>
+                    </div>
+                    <div class="example-box">
+                        <h3>次の研究への展開</h3>
+                        <div class="bullet-point">第2部での実証：異分野統合理論</div>
+                        <div class="bullet-point">第3部での応用：心理学理論統合</div>
+                        <div class="bullet-point">この手法による新たな発見</div>
+                        <div class="bullet-point">学問の境界を超えた統合</div>
+                    </div>
+                </div>
+                <div class="natural-transformation" style="text-align: center;">
+                    <h3>🚀 圏論的思考の扉が開かれました</h3>
+                    <div style="font-size: 1.2em; color: white;">
+                        数学は抽象的な学問ではなく、<br>
+                        人生の美しさを表現する言語だった
+                    </div>
+                </div>
+                <div class="discovery-box" style="text-align: center;">
+                    <div style="font-size: 1.1em;">
+                        🌟 次：第2部・第3部で、この手法による具体的な研究成果を見ていきましょう！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀ 前へ</button>
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">11</span>
+            </span>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">次へ ▶</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < totalSlides) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // キーボードナビゲーション
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+        });
+
+        // 初期化
+        showSlide(0);
+    </script>
+</body>
+</html>
